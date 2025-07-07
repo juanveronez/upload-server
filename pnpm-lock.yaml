@@ -32,6 +32,9 @@ importers:
       postgres:
         specifier: ^3.4.7
         version: 3.4.7
+      uuidv7:
+        specifier: ^1.0.2
+        version: 1.0.2
       zod:
         specifier: ^3.25.75
         version: 3.25.75
@@ -1225,6 +1228,10 @@ packages:
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
 
+  uuidv7@1.0.2:
+    resolution: {integrity: sha512-8JQkH4ooXnm1JCIhqTMbtmdnYEn6oKukBxHn1Ic9878jMkL7daTI7anTExfY18VRCX7tcdn5quzvCb6EWrR8PA==}
+    hasBin: true
+
   vite-node@3.2.4:
     resolution: {integrity: sha512-EbKSKh+bh1E1IFxeO0pg1n4dvoOTt0UDiXMd/qn++r98+jPO1xtJilvXldeuQ8giIB5IkpjCgMleHMNEsGH6pg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
@@ -2258,6 +2265,8 @@ snapshots:
   typescript@5.8.3: {}
 
   undici-types@7.8.0: {}
+
+  uuidv7@1.0.2: {}
 
   vite-node@3.2.4(@types/node@24.0.10)(tsx@4.20.3)(yaml@2.8.0):
     dependencies:
