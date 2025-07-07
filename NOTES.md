@@ -84,3 +84,23 @@ Este ORM é muito mais próximo do SQL puro, sendo quase um query builder, mas c
 Quando lidamos com campos de data no banco de dados podemos optar por usar campos com ou sem timezone.
 O campo **sem timezone** é recomendado para quando a informação de data não será muito utilizada pela aplicação, como por exemplo quando a data é apenas um registro de criação ou atualização de um recurso.
 Já o campo **com timezone** é recomendado para quando a data será utilizada para comparações dentro da aplicação, como em casos de agendamento de eventos, por exemplo.
+
+## Estratégias de ID
+
+Os IDs de uma tabela são importantes para indentificação e para acesso ao registro.
+Quando usamos IDs sequenciais temos como vantagem o dado ser facilmente ordenável e de armazenamento mais eficiente (por ocupar pouco espaço no banco). Mas como desvantagem temos que é previsível, logo se tivermos uma rota `/users/:id` um usuário malicioso pode tentar acessar outros usuários.
+
+A ordenação dos IDs é importante pois em rotas paginadas podemos usar táticas de paginação baseadas no ID, como por exemplo:
+`SELECT * FROM users WHERE id > 50 ORDER BY id LIMIT 10`
+Dessa forma será retornado os usuários com ID entre 51 e 60.
+
+Outras táticas de IDs como o UUID (normalmente o V4) são muito mais seguras por conter uma cadeia complexa de caracteres, mas como desvantagem não são ordenáveis e ocupam mais espaço no banco de dados.
+
+Porém existem algoritmos de geração de IDs que são seguros e ordenáveis, como por exemplo:
+- cuid
+- ulid
+- snowflakeid (usado pelo Discord, Twitter, Instagram, etc.)
+- uuidv7
+
+É importante notar que diferentes algoritmos tem uma taxa de colisão diferente, ou seja, a chance de dois IDs gerados serem iguais. Por isso é importante escolher um algoritmo que tenha uma taxa de colisão condizente com o caso de uso.
+Ou seja, algoritmos como o snowflaweid tem uma taxa mais baixa, mas são mais complexos de implementar, enquanto o uuidv7 tem uma taxa de colisão maior, mas é mais simples de implementar e usar.
