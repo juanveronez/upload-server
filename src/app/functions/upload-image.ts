@@ -2,6 +2,8 @@ import { Readable } from 'node:stream'
 import z from 'zod'
 import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
+import { makeLeft, makeRight } from '@/infra/shared/either'
+import { InvalidFileFormat } from './errors/invalid-file-format'
 
 const uploadImageInput = z.object({
   fileName: z.string(),
@@ -17,7 +19,7 @@ export async function uploadImage(input: UploadImageInput) {
   const { fileName, contentType } = uploadImageInput.parse(input)
 
   if (!allowedMimeTypes.includes(contentType)) {
-    throw new Error('Invalid file format.')
+    return makeLeft(new InvalidFileFormat())
   }
 
   // TODO: carregar a imagem para o Cloudflare R2
@@ -27,4 +29,6 @@ export async function uploadImage(input: UploadImageInput) {
     remoteKey: fileName,
     remoteUrl: fileName,
   })
+
+  return makeRight({ url: '' })
 }
