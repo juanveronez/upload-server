@@ -19,15 +19,15 @@ export async function uploadFileToStorage(input: UploadFileToStorageInput) {
     uploadFileToStorageInput.parse(input)
 
   const uniqueFileName = generateUniqueFileName(fileName)
-  const fileKey = `${folder}/${uniqueFileName}`
+  const key = `${folder}/${uniqueFileName}`
 
-  const filePublicUrl = new URL(fileKey, env.CLOUDFLARE_PUBLIC_URL).toString()
+  const filePublicUrl = new URL(key, env.CLOUDFLARE_PUBLIC_URL).toString()
 
   const upload = new Upload({
     client: r2,
     params: {
       Bucket: env.CLOUDFLARE_BUCKET,
-      Key: fileKey,
+      Key: key,
       Body: contentStream,
       ContentType: contentType,
     },
@@ -36,7 +36,7 @@ export async function uploadFileToStorage(input: UploadFileToStorageInput) {
   await upload.done()
 
   return {
-    key: uniqueFileName,
+    key,
     url: filePublicUrl,
   }
 }
