@@ -32,7 +32,6 @@ export const getUploadsRoute: FastifyPluginAsyncZod = async server => {
               total: z.number(),
             })
             .describe('Image uploaded'),
-          400: z.object({ message: z.string() }),
         },
       },
     },
