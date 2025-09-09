@@ -10,7 +10,7 @@ COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm i
 
-FROM base as build
+FROM base AS build
 
 WORKDIR /usr/src/app
 
@@ -24,10 +24,11 @@ FROM node:20-alpine3.21 AS deploy
 
 WORKDIR /usr/src/app
 
+USER 1000
+
 COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/package.json ./package.json
-
 
 ENV DATABASE_URL="postgresql://docker:docker@localhost:5432/upload_test"
 ENV CLOUDFLARE_ACCOUNT_ID="#"
