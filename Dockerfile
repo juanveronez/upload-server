@@ -20,7 +20,7 @@ COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 RUN pnpm build
 RUN pnpm prune --prod
 
-FROM node:20-alpine3.21 AS deploy
+FROM gcr.io/distroless/nodejs22-debian12 AS deploy
 
 WORKDIR /usr/src/app
 
@@ -39,4 +39,4 @@ ENV CLOUDFLARE_PUBLIC_URL="https://google.com"
 
 EXPOSE 3333
 
-CMD ["npm", "start"]
+CMD ["dist/infra/http/server.js"]
