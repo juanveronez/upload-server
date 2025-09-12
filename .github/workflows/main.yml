@@ -13,6 +13,18 @@ jobs:
         id: checkout # used to identify an step, it should be used to get infos from this step easily
         uses: actions/checkout@v4
 
+      - name: Configure NodeJS
+        id: configure-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install PNPM
+        id: install-pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
       - name: Configure AWS Credentials
         id: configure-aws-credentials # used to identify an step, it should be used to get infos from this step easily
         uses: aws-actions/configure-aws-credentials@v5.0.0
