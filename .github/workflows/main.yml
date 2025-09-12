@@ -44,12 +44,33 @@ jobs:
         run: |
           SHA=$(echo $GITHUB_SHA | head -c7) # Use $GITHUB_SHA to get commit sha, use | head -c7 to get first 7 chars and pass it to SHA (by echo command)
           echo "sha=$SHA" >> $GITHUB_OUTPUT  # Get $SHA value and concat it with sha=, then save it into $GITHUB_OUTPUT to let it available out this step
+
+      - name: Build and Load Image
+        id: load-image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ steps.generate_tag.outputs.sha }}
+
+      - name: Run Trivy Vulnerability Scanner
+        id: run-trivy-scanner
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: '${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ steps.generate_tag.outputs.sha }}'
+          format: 'table'
+          # exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+
       - name: Build and Push the Image to AWS ECR
         id: build-push-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ steps.generate_tag.outputs.sha }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ steps.generate_tag.outputs.sha }}
+
