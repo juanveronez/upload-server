@@ -1,6 +1,7 @@
 services:
   app:
     build: .
+    restart: unless-stopped
     ports:
       - '3333:3333'
     env_file:
@@ -12,12 +13,11 @@ services:
   db:
     container_name: postgres
     image: bitnami/postgresql:latest
+    restart: unless-stopped
     ports:
-      - '5432:5432'
-    environment:
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=upload
+      - '$POSTGRES_PORT:$POSTGRES_PORT'
+    env_file:
+      - .env
     volumes:
       - './docker:/docker-entrypoint-initdb.d'
       - db:/bitnami/postgresql
