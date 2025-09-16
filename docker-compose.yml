@@ -5,11 +5,13 @@ services:
       - '3333:3333'
     env_file:
       - .env
+    depends_on:
+      - db
+    networks:
+      - upload
   db:
     container_name: postgres
     image: bitnami/postgresql:latest
-    ports:
-      - '5432:5432'
     environment:
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=docker
@@ -17,6 +19,15 @@ services:
     volumes:
       - './docker:/docker-entrypoint-initdb.d'
       - db:/bitnami/postgresql
+    networks:
+      - upload
+      - db
 
 volumes:
   db:
+
+networks:
+  db:
+    driver: bridge #default
+  upload:
+    driver: bridge #default
