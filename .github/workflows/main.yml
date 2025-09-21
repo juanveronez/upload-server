@@ -80,4 +80,13 @@ jobs:
           push: true
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ steps.generate_tag.outputs.sha }}
-
+      - name: Deploy to App Runner
+        id: deploy-app-runner
+        uses: awslabs/amazon-app-runner-deploy@main
+        with:
+          service: upload-server
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ steps.generate_tag.outputs.sha }}
+          region: ${{ vars.AWS_REGION }}
+          cpus: 1
+          memory: 2
+          port: 3333
