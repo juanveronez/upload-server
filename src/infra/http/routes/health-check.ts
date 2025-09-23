@@ -21,7 +21,11 @@ export const healthCheckRoute: FastifyPluginAsyncZod = async server => {
     async (_request, reply) => {
       return reply
         .status(200)
-        .send({ application: 'Ok', database: 'Unknown', bucket: 'Unknown' })
+        .send({
+          application: 'Ok',
+          database: 'Under Development',
+          bucket: 'Under Development',
+        })
     }
   )
 }
